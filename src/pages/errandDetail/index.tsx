@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View } from "@tarojs/components";
 import "taro-ui/dist/style/components/icon.scss";
-import { heightRpx, getStorageSync, baseUrl } from "../../static";
+import { heightRpx, getStorageSync, baseUrl, swapTime } from "../../static";
 import Taro, { getCurrentInstance } from "@tarojs/taro";
 import { orderType, paramsType } from "./type";
 
@@ -9,30 +9,15 @@ export default function BottomBar() {
     const params = getCurrentInstance().router?.params;
 
     const [heightrpx, setHeightRpx] = useState(0);
-    const [order, setOrder] = useState<orderType>();
+    const [order, setOrder] = useState<any>();
 
     useEffect(() => {
-        // Taro.showModal({
-        //     title: '提示',
-        //     content: params?.orderIndex,
-        //     success: function (res) {
-        //         if (res.confirm) {
-        //             console.log('用户点击确定')
-        //         } else if (res.cancel) {
-        //             console.log('用户点击取消')
-        //         }
-        //     }
-        // })
-        // Taro.showToast({
-        //     title: params?.openId || '',
-        //     icon: 'success',
-        //     duration: 2000,
-        // })
         Taro.request({
-            url: `${baseUrl}/order/getSingleOrder`, // 获取单个订单信息
+            url: `${baseUrl}/order/getSingleErrand`, // 获取单个订单信息
             data: {
                 openId: getStorageSync("openId"),
-                orderIndex: params?.orderIndex || getStorageSync("orderIndex")
+                orderIndex: params?.orderIndex
+                // orderIndex: "7299629026486392625824",
             },
             method: "POST",
             header: {
@@ -40,11 +25,6 @@ export default function BottomBar() {
             },
             success: res => {
                 setOrder(res.data.data[0]);
-                // Taro.showToast({
-                //     title: res.data.data,
-                //     icon: 'success',
-                //     duration: 2000,
-                // })
             }
         })
         heightRpx(res => {
@@ -75,34 +55,35 @@ export default function BottomBar() {
                     <View style={{ color: "rgb(254,187,64)", backgroundColor: "rgb(255,248,236)", fontSize: "12px", padding: "3rpx 20rpx 3px 20rpx", borderRadius: "13px" }}>祝你购物愉快! </View>
                 </View>
             </View>
-            <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "95%", height: "320rpx", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
-                <View style={{ width: "92%", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
-                    <View style={{ fontSize: "18px" }}>订单已完成</View>
+            <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "95%", height: "260rpx", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
+                <View style={{ width: "92%", height: "70%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
+                    <View style={{ fontSize: "18px" }}>订单创建成功</View>
                     <View style={{ fontSize: "14px", color: "rgb(153,153,153)" }}>感谢你对我们的信任, 期待您的下次光临</View>
-                    <View onClick={() => Taro.navigateTo({
+                    {/* <View onClick={() => Taro.navigateTo({
                         url: `/pages/evaluate/index`
                     })
-                    } style={{ color: "rgb(153,153,153)", width: "170rpx", height: "65rpx", borderRadius: "4px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid rgb(221,221,221)", fontSize: "13px" }}>评价</View>
+                    } style={{ color: "rgb(153,153,153)", width: "170rpx", height: "65rpx", borderRadius: "4px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid rgb(221,221,221)", fontSize: "13px" }}>评价</View> */}
                 </View>
             </View>
             <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "95%", height: "auto", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
                 <View style={{ width: "92%", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
-                    <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", border: "0px solid rgb(221,221,221)", borderWidth: "0px 0px 1px 0px", width: "100%", height: "125rpx", fontSize: "18px" }}>
-                        <View>{'巷子里副食店'}</View>
-                        <View onClick={() => {
+                    <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", border: "0px solid rgb(221,221,221)", borderWidth: "0px 0px 0px 0px", width: "100%", height: "125rpx", fontSize: "18px" }}>
+                        <View>跑腿内容</View>
+                        {/* <View onClick={() => {
                             Taro.makePhoneCall({
                                 phoneNumber: '15982843367', // 拨打电话
                             })
-                        }} className="at-icon at-icon-phone" style={{ fontSize: "22px", color: "rgb(254,108,54)" }}></View>
+                        }} className="at-icon at-icon-phone" style={{ fontSize: "22px", color: "rgb(254,108,54)" }}></View> */}
                     </View>
-                    <View style={{ fontSize: "12px", color: "rgb(153,153,153)", width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
-                        {order?.shopList != "" ? renderOrder() : ''}
-                        <View style={{ border: "0px solid rgb(221,221,221)", borderWidth: "0px 0px 1px 0px", width: "100%", height: "20rpx" }}>
+                    <View style={{ fontSize: "15px", color: "rgb(153,153,153)", width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
+                        {/* {order?.shopList != "" ? renderOrder() : ''} */}
+                        {order?.orderText}
+                        {/* <View style={{ border: "0px solid rgb(221,221,221)", borderWidth: "0px 0px 1px 0px", width: "100%", height: "20rpx" }}> */}
 
-                        </View>
+                        {/* </View> */}
                     </View>
-                    <View style={{ width: "100%", height: "100rpx", fontSize: "13px", color: "rgb(153,153,153)", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                        合计: <View style={{ color: "rgb(254,108,54)" }}> {order?.totalPrice}￥</View>
+                    <View style={{ width: "100%", height: "50rpx", fontSize: "13px", color: "rgb(153,153,153)", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                        {/* 合计: <View style={{ color: "rgb(254,108,54)" }}> {order?.totalPrice}￥</View> */}
                     </View>
                 </View>
             </View>
@@ -111,25 +92,22 @@ export default function BottomBar() {
                 <View style={{ width: "92%", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
                     <View style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", border: "0px solid rgb(221,221,221)", borderWidth: "0px 0px 1px 0px", width: "100%", height: "125rpx", fontSize: "18px" }}>订单信息</View>
                     <View style={{ fontSize: "12px", color: "rgb(153,153,153)", width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
-                        <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
+                        {/* <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
                             <View>备注</View>
                             <View>{order?.remarks}</View>
-                        </View>
+                        </View> */}
                         <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
                             <View>订单编号</View>
                             <View>{order?.orderIndex}</View>
                         </View>
                         <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
-                            <View>订单地址</View>
-                            <View>{order?.orderAddress}</View>
+                            <View>跑腿地址</View>
+                            <View>{order?.address}</View>
                         </View>
                         <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
                             <View>下单时间</View>
-                            <View>{order?.orderDate}</View>
-                        </View>
-                        <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
-                            <View>支付方式</View>
-                            <View>{order?.orderPayType}</View>
+                            <View>{order?.errandDate}</View>
+                            {/* <View>{swapTime()}</View> */}
                         </View>
                     </View>
                 </View>

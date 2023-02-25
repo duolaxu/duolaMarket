@@ -35,7 +35,20 @@ export default function BottomBar() {
         getNowLocation(addr => {
             setAddress(addr);
             // console.log("addr = ", addr);
-        })
+        });
+        // postApi(`${baseUrl}/order/getAddress`, {
+        //     openId: getStorageSync("openId")
+        // })
+        //     .then(res => {
+        //         let data = res.data.data;
+        //         if (data.length != 0) {
+        //             setName(data.userName);
+        //             setEndAddress(data.endAddress);
+        //             setPhone(data.userPhone);
+        //             setPreAddress(data.preAddress);
+        //             setTagName(data.addressTagName);
+        //         }
+        //     })
 
     }, [])
 
@@ -64,15 +77,15 @@ export default function BottomBar() {
             }).then(res => {
                 if (res.data.code == 0) {
                     Taro.showToast({
-                        title: '修改成功',
+                        title: '地址修改成功',
                         icon: 'success',
                         duration: 1500//持续的时间
                     });
-                    setTimeout(() => {
-                        Taro.redirectTo({
-                            url: "/pages/entrancePage/index"
-                        })
-                    }, 1500)
+                    // setTimeout(() => {
+                    //     Taro.redirectTo({
+                    //         url: "/pages/entrancePage/index"
+                    //     })
+                    // }, 1500)
                 }
             })
         } else {

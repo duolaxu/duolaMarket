@@ -47,7 +47,7 @@ export default function BottomBar() {
     return (<>
         <View style={{ position: "relative", zIndex: "100", display: "flex", flexDirection: "column", alignItems: "center", width: "750rpx", height: "auto", backgroundColor: "rgb(244,244,244)", overflow: "scroll", }}>
             <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "center", width: "95%", height: "320rpx", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
-                <View style={{ fontSize: "18px", height: "40%", display: "flex", alignItems: "center" }}>取餐码</View>
+                <View style={{ fontSize: "18px", height: "40%", display: "flex", alignItems: "center" }}>订单凭证</View>
                 <View style={{ fontSize: "32px", height: "30%", display: "flex", alignItems: "flex-start" }}>{order?.certificate}</View>
                 <View style={{ height: "30%", display: "flex", alignItems: "center" }}>
                     <View style={{ color: "rgb(254,187,64)", backgroundColor: "rgb(255,248,236)", fontSize: "12px", padding: "3rpx 20rpx 3px 20rpx", borderRadius: "13px" }}>请留意叫号, 祝你用餐愉快! </View>

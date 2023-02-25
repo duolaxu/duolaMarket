@@ -34,22 +34,25 @@ export default function Dish(prop) {
     }, [reRenderDishData, clickInput])
     useEffect(() => {
 
-        Taro.createSelectorQuery().select(`#dish_${dishIndex}`).boundingClientRect(function (rect) {
-            // if (0 <= rect.top) {
-            //     that.setData({
-            //         curr: false
-            //     })
-            // } else {
-            //     that.setData({
-            //         curr: true
-            //     })
-            // }
-            // console.log(dishIndex + " = " + rect.top);
-            if (rect.top > 200 && rect.top < 2000) {
-                setImgSrc(true);
-            }
+        setTimeout(() => {
+            setImgSrc(true);
+        }, dishIndex * 10); //图片异步加载
+        // Taro.createSelectorQuery().select(`#dish_${dishIndex}`).boundingClientRect(function (rect) {
+        //     // if (0 <= rect.top) {
+        //     //     that.setData({
+        //     //         curr: false
+        //     //     })
+        //     // } else {
+        //     //     that.setData({
+        //     //         curr: true
+        //     //     })
+        //     // }
+        //     // console.log(dishIndex + " = " + rect.top);
+        //     if (rect.top > 200 && rect.top < 2000) {
+        //         setImgSrc(true);
+        //     }
 
-        }).exec()
+        // }).exec()
 
         // console.log("dishIndex = ", dishIndex);
         // document.addEventListener("scroll", () => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Image, Textarea, Radio, Button } from "@tarojs/components";
 import "taro-ui/dist/style/components/icon.scss";
-import { heightRpx, baseUrl, getStorageSync, swapTime } from "../../static";
+import { heightRpx, baseUrl, getStorageSync, swapTime, postApi } from "../../static";
 import Taro, { getCurrentInstance, setStorageSync, useDidHide, useDidShow } from "@tarojs/taro";
 import jsrsasign from 'jsrsasign';
 
@@ -13,7 +13,42 @@ export default function BottomBar() {
     const [remarks, setRemarks] = useState("");
     const [payTime, setPayTime] = useState(0); // 避免重复支付，两次点击时间间隔大于一分钟
 
+    // 以下为地址信息
+    const [userName, setUserName] = useState("");
+    const [preAddress, setPreAddress] = useState("");
+    const [endAddress, setEndAddress] = useState("");
+    const [userPhone, setUserPhone] = useState("");
+    const [addressTagName, setAddressTagName] = useState("");
+    const [hasAddress, setHasAddress] = useState(true);
+    // url: `/pages/deliveryAddress/index?
+    // hasAddress=${hasAddress}&userName=${userName}&userPhone=${userPhone}&
+    // preAddress=${preAddress}&endAddress=${endAddress}&addressTagName=${addressTagName}`,
+    // useDidHide(() => {
+    //     console.log("hide");
+    // })
+    useDidShow(() => {
+        postApi(`${baseUrl}/order/getAddress`, {
+            openId: getStorageSync("openId"),
+        })
+            .then(res => {
+                let data = res.data.data;
+                if (data.length == 0) {
+                    setHasAddress(false);
+                } else {
+                    // console.log("datouia = ", data);
+                    setHasAddress(true);
+                    setPreAddress(data[0].preAddress);
+                    setEndAddress(data[0].endAddress);
+                    setUserName(data[0].userName);
+                    setUserPhone(data[0].userPhone);
+                    setAddressTagName(data[0].addressTagName);
+                    // setAddress(`${data.}`)
+                }
+            })
+    })
+
     useEffect(() => {
+
         // console.log("OPENID = ", getStorageSync("openId"));
         let arr = getStorageSync("shopCart").sort((a, b) => a.dishId - b.dishId);
         let lent = arr.length;
@@ -160,6 +195,7 @@ export default function BottomBar() {
                         //         url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="订单待支付"`
                         //     });
                         // }, 500)
+                        let orderTime = swapTime();
                         Taro.request({
                             url: `${baseUrl}/order/createOrderDetail`,
                             data: {
@@ -167,7 +203,7 @@ export default function BottomBar() {
                                 shopList: orderStr,
                                 orderStatus: '已完成',
                                 orderIndex: orderIndex,
-                                orderDate: swapTime(),
+                                orderDate: orderTime,
                                 orderPayType: '微信支付',
                                 dineWay: orderType == 1 ? '外卖' : '自提',
                                 totalPrice: totalPrice,
@@ -176,6 +212,7 @@ export default function BottomBar() {
                                 storeConnection: params?.storeConnection,
                                 openId: getStorageSync("openId"),
                                 remarks,
+                                orderAddress: preAddress + endAddress,
                             },
                             method: "POST",
                             header: {
@@ -183,6 +220,26 @@ export default function BottomBar() {
                             },
                             success: function (res) {
                                 setStorageSync("shopCart", "");
+                                postApi(`${baseUrl}/order/sendWeChats`, {
+                                    openId: 'ofsx15BMM25n5I1nmT4Xg7X9x3Dg',
+                                    orderType: orderType == 1 ? '外卖' : '自提',
+                                    time: orderTime,
+                                    address: preAddress + endAddress,
+                                    templateId: 'XOZ7GeyCMY3YuQCOeQgjrXYys-UZy_bu_TRK8KOnUzI',
+                                }, {
+                                    // content-Type:
+                                }).then(() => {
+                                    postApi(`${baseUrl}/order/getMessagesNumber`, {
+                                        openId: 'ofsx15BMM25n5I1nmT4Xg7X9x3Dg'
+                                    }).then(res => {
+                                        if (res.data.code == 0) {
+                                            postApi(`${baseUrl}/order/updateMessagesNumber`, {
+                                                openId: getStorageSync("openId"),
+                                                messageNumber: res.data.data[0].messageNumber - 1
+                                            })
+                                        }
+                                    })
+                                })
                                 // setTimeout(() => {
                                 // Taro.showToast({
                                 //     title: '支付成功',
@@ -190,7 +247,7 @@ export default function BottomBar() {
                                 //     duration: 2000
                                 // })
                                 Taro.redirectTo({
-                                    url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="订单待支付"`
+                                    url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="订单支付成功"`
                                 });
                                 // }, 50)
                                 // Taro.showModal({
@@ -240,6 +297,7 @@ export default function BottomBar() {
                                 storeConnection: params?.storeConnection,
                                 openId: getStorageSync("openId"),
                                 remarks,
+                                orderAddress: preAddress + endAddress
                             },
                             method: "POST",
                             header: {
@@ -324,9 +382,24 @@ export default function BottomBar() {
                         <View>备注</View>
                     </View>
                     <View style={{ width: "100%", height: "150rpx", backgroundColor: "rgb(240,240,240)", borderRadius: "5px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Textarea onInput={e => remarking(e)} style={{ width: "100%", height: "100%" }} placeholder="请输入菜品备注" />
+                        <Textarea onInput={e => remarking(e)} style={{ width: "100%", height: "100%" }} placeholder="请输入备注" />
                     </View>
                     <View style={{ width: "100%", height: "30rpx" }}></View>
+                </View>
+            </View>
+            <View style={{ width: "95%", height: "auto", backgroundColor: "white", marginTop: "15rpx", borderRadius: "8px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+
+                <View style={{ width: "92%", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
+                    <View style={{ width: "100%", height: "70rpx", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <View className="flexCenter" style={{ fontSize: "14px", width: "10%", height: "100%" }}>地址</View>
+                        <View className="flexCenter" style={{ fontSize: "12px", width: "80%", height: "100%" }}>{preAddress + endAddress}</View>
+                        <View onClick={() => {
+                            Taro.navigateTo({
+                                url: `/pages/deliveryAddress/index?hasAddress=${hasAddress}&userName=${userName}&userPhone=${userPhone}&preAddress=${preAddress}&endAddress=${endAddress}&addressTagName=${addressTagName}`,
+                            })
+                        }} className="flexCenter" style={{ fontSize: "12px", color: "rgb(254,108,57)", width: "10%", height: "100%" }}>修改地址</View>
+                    </View>
+                    {/* <View style={{ width: "100%", height: "30rpx" }}></View> */}
                 </View>
             </View>
 
@@ -369,14 +442,28 @@ export default function BottomBar() {
                 </View>
                 <View style={{ width: "50%", height: "100%", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
                     <Button onClick={() => {
-                        if (Date.now() - payTime > 600000) {
-                            toPay();
-                            setPayTime(Date.now());
-                            // Taro.showToast({
-                            //     title: '支付',
-                            //     icon: 'success',
-                            //     duration: 100
-                            // })
+                        if (hasAddress) {
+                            if (Date.now() - payTime > 600000) {
+                                toPay();
+                                setPayTime(Date.now());
+                                // Taro.showToast({
+                                //     title: '支付',
+                                //     icon: 'success',
+                                //     duration: 100
+                                // })
+                            }
+                        } else {
+                            Taro.showModal({
+                                title: '提示',
+                                content: '检测到订单地址为空，请点击修改地址按钮添加收货地址',
+                                success: function (res) {
+                                    if (res.confirm) {
+                                        console.log('用户点击确定')
+                                    } else if (res.cancel) {
+                                        console.log('用户点击取消')
+                                    }
+                                }
+                            })
                         }
                     }} style={{ width: "230rpx", height: "85rpx", fontSize: "18px", borderRadius: "20px", backgroundColor: "rgb(254,108,57)", color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <View>

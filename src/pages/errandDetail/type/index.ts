@@ -8,7 +8,6 @@ export interface orderType {
     orderDate: string;
     orderPayType: string;
     remarks: string;
-    orderAddress: string;
 }
 
 export interface paramsType {

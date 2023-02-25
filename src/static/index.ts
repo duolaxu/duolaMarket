@@ -62,6 +62,19 @@ export const swapTime = () => {
     return strDate;
 }
 
+// export const swapStrTime = (date) => {
+//     // let date = new Date();
+//     let Y = date.getFullYear() + '-';
+//     let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+//     let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+
+//     let h = (date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours()) + ':';
+//     let m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':';
+//     let s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+//     let strDate = Y + M + D + h + m + s;
+//     return strDate;
+// }
+
 export const distance = (lat1, lng1, lat2, lng2) => {
     // lat1用户的纬度
     // lng1用户的经度
@@ -167,7 +180,7 @@ export const postApi = async (url: string, params: Object, header?: Object) => {
         data: params,
         method: "POST",
         header: {
-            'content-type': 'application/json', // 默认值
+            'Content-Type': 'application/json;charset=utf-8', // 默认值
             ...header
         },
     });
@@ -186,4 +199,42 @@ export const getApi = (url: string, callback: Function, header?: Object) => {
             callback(res);
         }
     })
+}
+
+// 判断输入框内容是否为空
+export const judgeInput = (str: string) => {
+    let lent = str.length;
+    if (str == "") {
+        return false;
+    }
+    for (let i = 0; i < lent; i++) {
+        if (str[i] != ' ') {
+            return true;
+        }
+    }
+    return false;
+}
+
+// 订阅消息开启
+export const addMessagesNumber = (messagesNumber, setMessagesNumber) => {
+    Taro.requestSubscribeMessage({   // 调起消息订阅界面
+        tmplIds: ['XOZ7GeyCMY3YuQCOeQgjrXYys-UZy_bu_TRK8KOnUzI'],
+        success(res) {
+            let Values = Object.values(res);
+            let judge = Values.indexOf('accept') == -1 ? false : true;
+            if (judge) {
+                postApi(`${baseUrl}/order/updateMessagesNumber`, {
+                    openId: getStorageSync("openId"),
+                    messageNumber: messagesNumber + 1,
+                }).then(res => {
+                    if (res.data.code == 0)
+                        setMessagesNumber(number => number + 1);
+                })
+            }
+        },
+        fail(err) {
+            console.log(err);
+        }
+    })
+
 }

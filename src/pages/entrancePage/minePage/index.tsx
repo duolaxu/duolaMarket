@@ -2,6 +2,7 @@ import { View, Image, Input } from "@tarojs/components";
 import { baseUrl, getStorageSync, getNowLocation } from "../../../static";
 import { useState, useEffect } from "react";
 import Taro from "@tarojs/taro";
+import AddMessageNumber from "../../../components/addMessageNumber";
 export default function minePage(props) {
     const { activeIndex } = props;
     const [nickName, setNickName] = useState("");
@@ -170,6 +171,7 @@ export default function minePage(props) {
                     <View className="at-icon at-icon-chevron-right" style={{ fontSize: "20px", width: "50rpx", color: "rgb(212,212,212)" }}></View>
                 </View>
             </View>
+            {/* <AddMessageNumber /> */}
         </View>
     </>)
 }

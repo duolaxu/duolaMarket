@@ -93,7 +93,7 @@ export default function MainContent(props) {
                 for (let i = 0; i < typeList.length; i++) {
                     setTimeout(() => {
                         getDishTypeList(i, typeList[i]);
-                    }, 200 * i)
+                    }, 50 * i)
                 }
             }
         })

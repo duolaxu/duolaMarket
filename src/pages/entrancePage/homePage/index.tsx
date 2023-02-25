@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import {heightRpx} from "../../../static";
+import { heightRpx } from "../../../static";
 export default function Home() {
-    const [heightrpx,setHeightrpx] = useState(0);
+    const [heightrpx, setHeightrpx] = useState(0);
     useEffect(() => {
         heightRpx(res => {
             setHeightrpx(res);
@@ -17,7 +17,11 @@ export default function Home() {
                         url: "/pages/index/index"
                     })
                 }} className="flexCenter" style={{ width: "300rpx", height: "300rpx", backgroundColor: "aqua" }}>下单</View>
-                <View className="flexCenter" style={{ width: "300rpx", height: "300rpx", backgroundColor: "yellow" }}>跑腿</View>
+                <View onClick={() => {
+                    Taro.navigateTo({
+                        url: `/pages/errand/index`
+                    })
+                }} className="flexCenter" style={{ width: "300rpx", height: "300rpx", backgroundColor: "yellow" }}>跑腿</View>
             </View>
         </View>
     </>)
