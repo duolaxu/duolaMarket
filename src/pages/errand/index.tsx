@@ -114,7 +114,7 @@ export default function BottomBar() {
                     }).then(res => {
                         if (res.data.code == 0) {
                             postApi(`${baseUrl}/order/updateMessagesNumber`, {
-                                openId: getStorageSync("openId"),
+                                openId: 'ofsx15BMM25n5I1nmT4Xg7X9x3Dg',
                                 messageNumber: res.data.data[0].messageNumber - 1
                             })
                         }

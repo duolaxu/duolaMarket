@@ -224,7 +224,7 @@ export const addMessagesNumber = (messagesNumber, setMessagesNumber) => {
             let judge = Values.indexOf('accept') == -1 ? false : true;
             if (judge) {
                 postApi(`${baseUrl}/order/updateMessagesNumber`, {
-                    openId: getStorageSync("openId"),
+                    openId: 'ofsx15BMM25n5I1nmT4Xg7X9x3Dg',
                     messageNumber: messagesNumber + 1,
                 }).then(res => {
                     if (res.data.code == 0)
