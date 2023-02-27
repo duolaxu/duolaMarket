@@ -3,47 +3,98 @@ import ErrandListChild from "./errandListChild";
 import { View } from "@tarojs/components";
 import { useEffect, useState } from "react";
 import Taro from "@tarojs/taro";
-import { baseUrl, getStorageSync, heightRpx } from "../../../static";
+import { baseUrl, getStorageSync, heightRpx, pxTorpx, postApi } from "../../../static";
 export default function orderList(props) {
     const [orderInfo, setOrderInfo] = useState([]);
     const [heightrpx, setHeightRpx] = useState(0);
     const { activeIndex } = props;
     const [selectBar, setSelectBar] = useState(0);
+    const [isDataNull, setDataNull] = useState(false);
     const [topBarIndex, setTopBarIndex] = useState(0);
+    const [firstIndex, setFirstIndex] = useState(0);
+
+    const getOrderDetail = (index) => {
+        postApi(`${baseUrl}/order/getOrderDetail`, {
+            openId: getStorageSync("openId"),
+            firstIndex: index,
+            endIndex: 10
+        })
+            .then(res => {
+                let data = res.data.data;
+                if (data.length == 0) {
+                    setDataNull(true);
+                } else {
+                    setDataNull(false);
+                    setFirstIndex(index + 10);
+                    // let arr = orderInfo;
+                    let arr = [];
+                    if (index != 0) {
+                        arr = orderInfo;
+                    }
+                    arr = arr.concat(data);
+                    setOrderInfo(arr);
+                }
+
+            })
+    }
+
+    const getErrand = (index) => {
+        Taro.request({
+            url: `${baseUrl}/order/getErrand`,
+            data: {
+                openId: getStorageSync("openId"),
+                firstIndex: index,
+                endIndex: 10,
+            },
+            method: "POST",
+            header: {
+                'content-type': 'application/json' // 默认值
+            },
+            success: res => {
+                // setOrderInfo(res.data.data);
+                let data = res.data.data;
+                if (data.length == 0) {
+                    setDataNull(true);
+                } else {
+                    setDataNull(false);
+                    let arr = [];
+                    if (index != 0) {
+                        arr = orderInfo;
+                    }
+                    // let arr = orderInfo;
+                    arr = arr.concat(data);
+                    setOrderInfo(arr);
+                    setFirstIndex(index + 10);
+                }
+            }
+        })
+    }
+
     useEffect(() => {
         if (activeIndex == 1) {
             heightRpx(res => {
                 setHeightRpx(res);
             })
             if (topBarIndex == 0) {
-                Taro.request({
-                    url: `${baseUrl}/order/getOrderDetail`,
-                    data: {
-                        openId: getStorageSync("openId")
-                    },
-                    method: "POST",
-                    header: {
-                        'content-type': 'application/json' // 默认值
-                    },
-                    success: res => {
-                        setOrderInfo(res.data.data);
-                    }
-                })
+                getOrderDetail(0);
+                setDataNull(false);
+                // Taro.request({
+                //     url: `${baseUrl}/order/getOrderDetail`,
+                //     data: {
+                //         openId: getStorageSync("openId")
+                //     },
+                //     method: "POST",
+                //     header: {
+                //         'content-type': 'application/json' // 默认值
+                //     },
+                //     success: res => {
+                //         setOrderInfo(res.data.data);
+                //     }
+                // })
             }
             else {
-                Taro.request({
-                    url: `${baseUrl}/order/getErrand`,
-                    data: {
-                        openId: getStorageSync("openId")
-                    },
-                    method: "POST",
-                    header: {
-                        'content-type': 'application/json' // 默认值
-                    },
-                    success: res => {
-                        setOrderInfo(res.data.data);
-                    }
-                })
+                getErrand(0);
+                setDataNull(false);
             }
         }
     }, [activeIndex, topBarIndex])
@@ -111,18 +162,24 @@ export default function orderList(props) {
             // }
         } else if (y - touchY > 50 && Math.abs(x - touchX) < 50) {
         } else if (y - touchY < -50 && Math.abs(x - touchX) < 50) {
-            // const query = Taro.createSelectorQuery();
-            // query.select("#house").boundingClientRect(res => {
-            //     pxTorpx(res_1 => {
-            //         let judge = (res.height + res.top) * res_1 - heightrpx;
-            //         if (judge <= 400) {
-            //             if (!isDataNull) {
-            //                 getHouse(searchName, barText[houseType], textArr[selectIndex], res, 1, firstIndex, endIndex);
-            //             }
-            //         }
+            const query = Taro.createSelectorQuery();
+            query.select("#orderList").boundingClientRect(res => {
+                pxTorpx(res_1 => {
+                    let judge = (res.height + res.top) * res_1 - heightrpx;
+                    if (judge <= 400) {
+                        console.log("元素节点数据 = ", res);
+                        if (!isDataNull) {
+                            // searchWork(searchName, 1, firstIndex, 10);
+                            if (topBarIndex == 0) {
+                                getOrderDetail(firstIndex);
+                            } else {
+                                getErrand(firstIndex);
+                            }
+                        }
+                    }
 
-            //     })
-            // }).exec()
+                })
+            }).exec()
         }
 
     }
@@ -139,7 +196,7 @@ export default function orderList(props) {
         });
     }
     return (<>
-        <View onTouchStart={(e) => { touchStart(e) }}
+        <View id="orderList" onTouchStart={(e) => { touchStart(e) }}
             onTouchEnd={(e) => { touchEnd(e) }} style={{ zIndex: "1", width: "750rpx", height: heightrpx + 'rpx', backgroundColor: "rgb(224,224,224)", position: "fixed", left: "0rpx", top: "0rpx" }}></View>
         <View className="flexCenter" style={{ width: "750rpx", height: "70rpx" }}>
             {renderTopBar()}
@@ -158,6 +215,9 @@ export default function orderList(props) {
                 alignItems: "center"
             }}>
             {renderOrderList()}
+            {isDataNull ?
+                <View className="flexCenter" style={{ height: "90rpx", width: "100%", color: "rgb(254,108,57)" }}>已经到底啦~</View> : ""
+            }
         </View>
         <View style={{ width: "750rpx", height: "130rpx" }}></View>
     </>)

@@ -6,6 +6,7 @@ import Taro from "@tarojs/taro";
 export default function BottomBar(props) {
     const { iconUrl, bottomBackColor, bottomBtnBackColor, setClickCart, shopCartCounts, setShowDishDetail, storeName, storeImg, storeConnection } = props;
     const [shopCartMoney, setShopCartMoney] = useState(0);
+    const [preTime, setPreTime] = useState(0); // 节流防抖
     useEffect(() => {
         const data = getStorageSync("shopCart");
         let totalMoney = 0;
@@ -102,7 +103,15 @@ export default function BottomBar(props) {
                         <View>
                             去结算
                         </View>
-                    </Button> : <Button onClick={e => toBought(e)} style={{ width: "230rpx", height: "85rpx", fontSize: "18px", borderRadius: "20px", backgroundColor: bottomBtnBackColor, color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    </Button> : <Button onClick={
+                        e => {
+                            let nowTime = Date.now();
+                            if (nowTime - preTime >= 1500) {
+                                setPreTime(nowTime);
+                                toBought(e);
+                            }
+                        }
+                    } style={{ width: "230rpx", height: "85rpx", fontSize: "18px", borderRadius: "20px", backgroundColor: bottomBtnBackColor, color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <View>
                             去结算
                         </View>

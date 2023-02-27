@@ -6,6 +6,7 @@ import Taro, { getCurrentInstance } from "@tarojs/taro";
 
 export default function BottomBar() {
     const params = getCurrentInstance().router?.params;
+    const [preTime, setPreTime] = useState(0); // 节流防抖
     const tagValue = {
         0: '家',
         1: '学校',
@@ -155,7 +156,11 @@ export default function BottomBar() {
                     </View>
                 </View>
                 <View onClick={() => {
-                    updateAddress();
+                    let nowTime = Date.now();
+                    if (nowTime - preTime >= 1000) {
+                        updateAddress();
+                        setPreTime(nowTime);
+                    }
                 }} className="flexCenter" style={{ width: "100%", height: "200rpx" }}>
                     <View className="flexCenter" style={{ width: "80%", height: "100rpx", borderRadius: "60rpx", color: "white", fontSize: "18px", backgroundColor: "rgb(255,108,55)" }}>
                         保存
