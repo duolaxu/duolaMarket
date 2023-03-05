@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Image, Textarea, Radio, Button } from "@tarojs/components";
 import "taro-ui/dist/style/components/icon.scss";
-import { heightRpx, baseUrl, getStorageSync, swapTime, postApi } from "../../static";
+import { heightRpx, baseUrl, getStorageSync, swapTime, postApi, printOrder, templatePrintData } from "../../static";
 import Taro, { getCurrentInstance, setStorageSync, useDidHide, useDidShow } from "@tarojs/taro";
 import jsrsasign from 'jsrsasign';
 
@@ -138,6 +138,17 @@ export default function BottomBar() {
                 sig.updateString(content);
                 // 加密后的16进制转成base64，这就是签名了
                 const sign = jsrsasign.hextob64(sig.sign());
+
+                let certificate = "";
+                for (let i = 0; i < 4; i++) {
+                    certificate += String.fromCharCode(Math.floor(Math.random() * (90 - 65 + 1) + 65));
+                }
+                let orderStr = '';
+                order.map(item => {
+                    orderStr += (item.dishName + '&' + item.dishCounts + ';');
+                })
+                let orderTime = swapTime();
+                // printOrder(orderTime, templatePrintData(swapTime(), orderIndex, `${preAddress}${endAddress}`, userName, userPhone, orderType == 1 ? '外卖' : '自提', certificate, order, totalPrice))
                 Taro.requestPayment({ // 调起微信支付
                     timeStamp,
                     nonceStr,
@@ -146,19 +157,10 @@ export default function BottomBar() {
                     paySign: `${sign}`,
                     success(res) {
                         setChecked(true);
-                        let ordertype = "";
-                        for (let i = 0; i < 4; i++) {
-                            ordertype += String.fromCharCode(Math.floor(Math.random() * (90 - 65 + 1) + 65));
-                        }
-                        let orderStr = '';
-                        order.map(item => {
-                            orderStr += (item.dishName + '&' + item.dishCounts + ';');
-                        })
-                        let orderTime = swapTime();
                         Taro.request({
                             url: `${baseUrl}/order/createOrderDetail`,
                             data: {
-                                certificate: ordertype,
+                                certificate: certificate,
                                 shopList: orderStr,
                                 orderStatus: '已支付',
                                 orderIndex: orderIndex,
@@ -178,6 +180,7 @@ export default function BottomBar() {
                                 'content-type': 'application/json'
                             },
                             success: function (res) {
+                                printOrder(orderTime, templatePrintData(swapTime(), orderIndex, `${preAddress}${endAddress}`, userName, userPhone, orderType == 1 ? '外卖' : '自提', certificate, order, totalPrice));
                                 setStorageSync("shopCart", "");
                                 postApi(`${baseUrl}/order/sendWeChats`, {
                                     openId: 'ofsx15BMM25n5I1nmT4Xg7X9x3Dg',
@@ -389,7 +392,7 @@ export default function BottomBar() {
                             })
                         } else {
                             if (hasAddress) {
-                                if (Date.now() - payTime > 600000) {
+                                if (Date.now() - payTime > 5000) {
                                     toPay();
                                     setPayTime(Date.now());
                                 }
