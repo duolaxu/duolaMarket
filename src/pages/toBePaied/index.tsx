@@ -55,12 +55,12 @@ export default function BottomBar() {
             </View>
             <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "95%", height: "320rpx", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
                 <View style={{ width: "92%", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
-                    <View style={{ fontSize: "18px" }}>订单已完成</View>
+                    <View style={{ fontSize: "18px" }}>订单已支付</View>
                     <View style={{ fontSize: "14px", color: "rgb(153,153,153)" }}>感谢你对我们的信任, 期待您的下次光临</View>
-                    <View onClick={() => Taro.navigateTo({
+                    {/* <View onClick={() => Taro.navigateTo({
                         url: `/pages/evaluate/index`
                     })
-                    } style={{ color: "rgb(153,153,153)", width: "170rpx", height: "65rpx", borderRadius: "4px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid rgb(221,221,221)", fontSize: "13px" }}>评价</View>
+                    } style={{ color: "rgb(153,153,153)", width: "170rpx", height: "65rpx", borderRadius: "4px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid rgb(221,221,221)", fontSize: "13px" }}>评价</View> */}
                 </View>
             </View>
             <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "95%", height: "auto", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>

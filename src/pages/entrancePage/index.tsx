@@ -1,54 +1,31 @@
 import { useEffect, useState } from "react";
 import { View } from "@tarojs/components";
 import "taro-ui/dist/style/components/icon.scss";
-import Home from "./home";
 import HomePage from "./homePage";
 import OrderList from "./orderList";
 import MinePage from "./minePage";
 import Taro from "@tarojs/taro";
-import { baseUrl, setStorageSync, postApi, getApi } from "../../static";
+import { baseUrl, setStorageSync, } from "../../static";
+// const { Configuration, OpenAIApi } = require("openai");
+// import { Configuration, OpenAIApi } from "openai";
 
 export default function BottomBar() {
     const [newUser, setNewUser] = useState(false);
-    const getUserInfo = () => {
-        var _this = this
-        Taro.showModal({
-            title: '温馨提示',
-            content: '亲，授权微信登录后才能正常使用小程序功能',
-            success(res) {
-                //如果用户点击了确定按钮
-                if (res.confirm) {
-                    Taro.getUserProfile({
-                        desc: '获取你的昵称、头像、地区及性别',
-                        success: res => {
-                            _this.setData({
-                                userInfo: res.userInfo,
-                                hasUserInfo: true
-                            })
-                        },
-                        fail: res => {
-                            //拒绝授权
-                            Taro.showToast({
-                                title: '您拒绝了请求,不能正常使用小程序',
-                                icon: 'error',
-                                duration: 2000
-                            });
-                            return;
-                        }
-                    });
-                } else if (res.cancel) {
-                    //如果用户点击了取消按钮
-                    Taro.showToast({
-                        title: '您拒绝了请求,不能正常使用小程序',
-                        icon: 'error',
-                        duration: 2000
-                    });
-                    return;
-                }
-            }
-        });
-    }
+    // const func = async () => {
+
+    //     const configuration = new Configuration({
+    //         apiKey: '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',
+    //     });
+    //     const openai = new OpenAIApi(configuration);
+
+    //     const completion = await openai.createCompletion({
+    //         model: "text-davinci-003",
+    //         prompt: "Hello world",
+    //     });
+    // }
+
     useEffect(() => {
+        // func();
         Taro.login({
             success(res) {
                 if (res.code) {
@@ -64,7 +41,6 @@ export default function BottomBar() {
                         },
                         success: function (res) {
                             setStorageSync("openId", res.data.data.openid);
-                            // console.log("openId = ", res.data.data);
                             setStorageSync("sessionKey", res.data.data.session_key);
                             if (res.data.code == 0) {
                                 setNewUser(false);
@@ -78,24 +54,6 @@ export default function BottomBar() {
                 }
             }
         })
-        // let urlHttps = "https://duolago.cn";
-        // urlHttps = encodeURI(urlHttps);
-        // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxb2af49ed2e30db19&redirect_uri=${urlHttps}&response_type=code&scope=snsapi_base#wechat_redirect`;
-        // getApi(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxb2af49ed2e30db19&redirect_uri=${urlHttps}&response_type=code&scope=snsapi_base#wechat_redirect`, res => {
-        //     // console.log("返回数据 = ", res);
-        //     Taro.showModal({
-        //         title: '提示',
-        //         content: res.data,
-        //         success: function (res) {
-        //             if (res.confirm) {
-        //                 console.log('用户点击确定')
-        //             } else if (res.cancel) {
-        //                 console.log('用户点击取消')
-        //             }
-        //         }
-        //     })
-        // })
-        // https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect
     }, [])
     const [activeIndex, setActiveIndex] = useState<Number>(0);
     let bottomText = [

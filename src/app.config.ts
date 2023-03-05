@@ -1,7 +1,6 @@
 export default defineAppConfig({
 
   pages: [
-    // 'pages/success/index',
     'pages/entrancePage/index',
     'pages/errand/index',
     'pages/errandDetail/index',

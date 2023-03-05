@@ -34,7 +34,7 @@ export default function BottomBar() {
                 <View style={{ width: "92%", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
                     <View style={{ width: "100%", height: "40%", display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
                         <Image style={{ width: "85rpx", height: "85rpx", borderRadius: "50%" }} src={`${baseUrl}/dishImg/1665294308315duola.png`} />
-                        <View style={{ marginLeft: "15rpx" }}>哆啦商店</View>
+                        <View style={{ marginLeft: "15rpx" }}>巷子里超市</View>
                     </View>
                     <View style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "100%", height: "60%" }}>
                         {renderStar(clickStarIndex)}

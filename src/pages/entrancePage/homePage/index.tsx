@@ -17,6 +17,11 @@ export default function Home() {
             <View style={{ display: "flex", width: "100%", height: "100%", flexDirection: "row", justifyContent: "space-around", alignItems: "center" }}>
                 <View style={{ width: "300rpx", height: "370rpx", backgroundColor: "white", borderRadius: "5px" }}>
                     <View onClick={() => {
+                        // Taro.showToast({
+                        //     title: '下单功能暂时还未对外开放哟~',
+                        //     icon: 'none',
+                        //     duration: 2000
+                        // })
                         let nowTime = Date.now();
                         if (nowTime - preTime >= 2000) {
                             Taro.navigateTo({
@@ -27,7 +32,7 @@ export default function Home() {
                     }} className="flexCenter" style={{ width: "300rpx", height: "300rpx", }}>
                         <Image src={XiadanIcon} />
                     </View>
-                    <View className="flexCenter" style={{ width: "100%", height: "70rpx", color: "#FF3655", fontWeight: "bold" }}>下单</View>
+                    <View className="flexCenter" style={{ width: "100%", height: "70rpx", color: "#FF6634", fontWeight: "bold" }}>下单</View>
                 </View>
                 <View style={{ width: "300rpx", height: "370rpx", backgroundColor: "white", borderRadius: "5px" }}>
                     <View onClick={() => {
@@ -41,7 +46,7 @@ export default function Home() {
                     }} className="flexCenter" style={{ width: "300rpx", height: "300rpx" }}>
                         <Image src={PaotuiIcon} />
                     </View>
-                    <View className="flexCenter" style={{ width: "100%", height: "70rpx", color: "#FF3655", fontWeight: "bold" }}>跑腿</View>
+                    <View className="flexCenter" style={{ width: "100%", height: "70rpx", color: "#FF6634", fontWeight: "bold" }}>跑腿</View>
                 </View>
             </View>
         </View>

@@ -20,12 +20,6 @@ export default function BottomBar() {
     const [userPhone, setUserPhone] = useState("");
     const [addressTagName, setAddressTagName] = useState("");
     const [hasAddress, setHasAddress] = useState(true);
-    // url: `/pages/deliveryAddress/index?
-    // hasAddress=${hasAddress}&userName=${userName}&userPhone=${userPhone}&
-    // preAddress=${preAddress}&endAddress=${endAddress}&addressTagName=${addressTagName}`,
-    // useDidHide(() => {
-    //     console.log("hide");
-    // })
     useDidShow(() => {
         postApi(`${baseUrl}/order/getAddress`, {
             openId: getStorageSync("openId"),
@@ -35,7 +29,6 @@ export default function BottomBar() {
                 if (data.length == 0) {
                     setHasAddress(false);
                 } else {
-                    // console.log("datouia = ", data);
                     setHasAddress(true);
                     setPreAddress(data[0].preAddress);
                     setEndAddress(data[0].endAddress);
@@ -48,8 +41,6 @@ export default function BottomBar() {
     })
 
     useEffect(() => {
-
-        // console.log("OPENID = ", getStorageSync("openId"));
         let arr = getStorageSync("shopCart").sort((a, b) => a.dishId - b.dishId);
         let lent = arr.length;
         let index = 1;
@@ -125,14 +116,13 @@ export default function BottomBar() {
             data: {
                 openId: getStorageSync("openId"),
                 description: "pay_test",
-                totalPrice
+                totalPrice: totalPrice * 100
             },
             method: "POST",
             header: {
                 'content-type': 'application/json',
             },
             success: function (res) {
-                // console.log("KEY = ", res.data.data.prepay_id);
                 let rsa = new jsrsasign.RSAKey();
                 rsa = jsrsasign.KEYUTIL.getKey(res.data.privateKey);
                 let orderIndex = res.data.orderIndex;
@@ -155,30 +145,7 @@ export default function BottomBar() {
                     signType: 'RSA',
                     paySign: `${sign}`,
                     success(res) {
-                        // if (res.errMsg == "requestPayment:ok") {
-                        // Taro.showModal({
-                        //     title: '提示',
-                        //     content: '这是一个模态弹窗',
-                        //     success: function (res) {
-                        //         if (res.confirm) {
-                        //             console.log('用户点击确定')
-                        //         } else if (res.cancel) {
-                        //             console.log('用户点击取消')
-                        //         }
-                        //     }
-                        // })
-
-                        // Taro.showToast({
-                        //     title: '支付成功',
-                        //     icon: 'success',
-                        //     duration: 1500//持续的时间
-                        // });
                         setChecked(true);
-                        const indexType = {
-                            'wm': 'takeOutIndex',
-                            'zt': 'pickSelfIndex'
-                        };
-                        // const ordertype = orderType == 1 ? 'wm' : 'zt';
                         let ordertype = "";
                         for (let i = 0; i < 4; i++) {
                             ordertype += String.fromCharCode(Math.floor(Math.random() * (90 - 65 + 1) + 65));
@@ -187,27 +154,19 @@ export default function BottomBar() {
                         order.map(item => {
                             orderStr += (item.dishName + '&' + item.dishCounts + ';');
                         })
-                        // Taro.redirectTo({
-                        //     url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="订单待支付"`
-                        // });
-                        // setTimeout(() => {
-                        //     Taro.redirectTo({
-                        //         url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="订单待支付"`
-                        //     });
-                        // }, 500)
                         let orderTime = swapTime();
                         Taro.request({
                             url: `${baseUrl}/order/createOrderDetail`,
                             data: {
                                 certificate: ordertype,
                                 shopList: orderStr,
-                                orderStatus: '已完成',
+                                orderStatus: '已支付',
                                 orderIndex: orderIndex,
                                 orderDate: orderTime,
                                 orderPayType: '微信支付',
                                 dineWay: orderType == 1 ? '外卖' : '自提',
                                 totalPrice: totalPrice,
-                                storeName: '巷子里副食店',
+                                storeName: '巷子里超市',
                                 storeImg: '/recruitment/undefined_1676647136208.jpg',
                                 storeConnection: params?.storeConnection,
                                 openId: getStorageSync("openId"),
@@ -240,84 +199,62 @@ export default function BottomBar() {
                                         }
                                     })
                                 })
-                                // setTimeout(() => {
-                                // Taro.showToast({
-                                //     title: '支付成功',
-                                //     icon: 'success',
-                                //     duration: 2000
-                                // })
                                 Taro.redirectTo({
-                                    url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="订单支付成功"`
+                                    url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="已支付"`
                                 });
-                                // }, 50)
-                                // Taro.showModal({
-                                //     title: '提示',
-                                //     content: '这是一个模态弹窗',
-                                //     success: function (res) {
-                                //         if (res.confirm) {
-                                //             console.log('用户点击确定')
-                                //         } else if (res.cancel) {
-                                //             console.log('用户点击取消')
-                                //         }
-                                //     }
-                                // })
-
-
-
 
                             }
                         })
-                        // }
 
                     },
                     fail(res) { // 用户取消支付
-                        // console.log("支付失败 = ", res);
-                        setChecked(true);
-                        let ordertype = "";
-                        for (let i = 0; i < 4; i++) {
-                            ordertype += String.fromCharCode(Math.floor(Math.random() * (90 - 65 + 1) + 65));
-                        }
-                        let orderStr = '';
-                        order.map(item => {
-                            orderStr += (item.dishName + '&' + item.dishCounts + ';');
-                        })
-                        Taro.request({
-                            url: `${baseUrl}/order/createOrderDetail`,
-                            data: {
-                                certificate: ordertype,
-                                shopList: orderStr,
-                                orderStatus: '待支付',
-                                orderIndex: orderIndex,
-                                orderDate: swapTime(),
-                                orderPayType: '微信支付',
-                                dineWay: orderType == 1 ? '外卖' : '自提',
-                                totalPrice: totalPrice,
-                                storeName: "巷子里副食店",
-                                storeImg: '/recruitment/undefined_1676647136208.jpg',
-                                storeConnection: params?.storeConnection,
-                                openId: getStorageSync("openId"),
-                                remarks,
-                                orderAddress: preAddress + endAddress
-                            },
-                            method: "POST",
-                            header: {
-                                'content-type': 'application/json'
-                            },
-                            success: function (res) {
-                                setStorageSync("shopCart", "");
-
-                                Taro.redirectTo({
-                                    url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="订单待支付"`
-                                });
-
-                            }
-                        })
-                    },
-                    complete(res) {
+                        Taro.navigateBack({
+                            delta: 1
+                        });
                         // Taro.redirectTo({
-                        //     url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="订单待支付"`
+                        //     url: "/pages/index/index"
                         // });
-                    }
+                        // setChecked(true);
+                        // let ordertype = "";
+                        // for (let i = 0; i < 4; i++) {
+                        //     ordertype += String.fromCharCode(Math.floor(Math.random() * (90 - 65 + 1) + 65));
+                        // }
+                        // let orderStr = '';
+                        // order.map(item => {
+                        //     orderStr += (item.dishName + '&' + item.dishCounts + ';');
+                        // })
+                        // Taro.request({
+                        //     url: `${baseUrl}/order/createOrderDetail`,
+                        //     data: {
+                        //         certificate: ordertype,
+                        //         shopList: orderStr,
+                        //         orderStatus: '待支付',
+                        //         orderIndex: orderIndex,
+                        //         orderDate: swapTime(),
+                        //         orderPayType: '微信支付',
+                        //         dineWay: orderType == 1 ? '外卖' : '自提',
+                        //         totalPrice: totalPrice,
+                        //         storeName: "巷子里超市",
+                        //         storeImg: '/recruitment/undefined_1676647136208.jpg',
+                        //         storeConnection: params?.storeConnection,
+                        //         openId: getStorageSync("openId"),
+                        //         remarks,
+                        //         orderAddress: preAddress + endAddress
+                        //     },
+                        //     method: "POST",
+                        //     header: {
+                        //         'content-type': 'application/json'
+                        //     },
+                        //     success: function (res) {
+                        //         setStorageSync("shopCart", "");
+
+                        //         Taro.redirectTo({
+                        //             url: `/pages/orderDetail/index?openId=${getStorageSync("openId")}&orderIndex=${orderIndex}&orderStatus="待支付"`
+                        //         });
+
+                        //     }
+                        // })
+                    },
                 })
             }
         })
@@ -442,29 +379,35 @@ export default function BottomBar() {
                 </View>
                 <View style={{ width: "50%", height: "100%", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
                     <Button onClick={() => {
-                        if (hasAddress) {
-                            if (Date.now() - payTime > 600000) {
-                                toPay();
-                                setPayTime(Date.now());
-                                // Taro.showToast({
-                                //     title: '支付',
-                                //     icon: 'success',
-                                //     duration: 100
-                                // })
-                            }
-                        } else {
-                            Taro.showModal({
-                                title: '提示',
-                                content: '检测到订单地址为空，请点击修改地址按钮添加收货地址',
-                                success: function (res) {
-                                    if (res.confirm) {
-                                        console.log('用户点击确定')
-                                    } else if (res.cancel) {
-                                        console.log('用户点击取消')
-                                    }
-                                }
+                        let myDate = new Date();
+                        let hour = myDate.getHours();
+                        if (hour < 8 || hour >= 22) {
+                            Taro.showToast({
+                                title: '抱歉, 该门店暂未开业~',
+                                icon: 'none',
+                                duration: 2000
                             })
+                        } else {
+                            if (hasAddress) {
+                                if (Date.now() - payTime > 600000) {
+                                    toPay();
+                                    setPayTime(Date.now());
+                                }
+                            } else {
+                                Taro.showModal({
+                                    title: '提示',
+                                    content: '检测到订单地址为空，请点击修改地址按钮添加收货地址',
+                                    success: function (res) {
+                                        if (res.confirm) {
+                                            console.log('用户点击确定')
+                                        } else if (res.cancel) {
+                                            console.log('用户点击取消')
+                                        }
+                                    }
+                                })
+                            }
                         }
+
                     }} style={{ width: "230rpx", height: "85rpx", fontSize: "18px", borderRadius: "20px", backgroundColor: "rgb(254,108,57)", color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <View>
                             支付

@@ -1,5 +1,6 @@
 export const baseUrl = 'https://duolago.cn';// 进行nginx代理，作了端口映射
 import Taro from "@tarojs/taro";
+import md5 from "md5";
 
 export const screenInfo = async (callback) => { // 手机屏幕信息
     const res = await Taro.getSystemInfo();
@@ -237,4 +238,59 @@ export const addMessagesNumber = (messagesNumber, setMessagesNumber) => {
         }
     })
 
+}
+
+export const templatePrintData = (time, orderIndex, address, name, phone) => {
+    return `
+    <S2><C>巷子里超市</C></S2>
+    <S2><C>-在线支付-</C></S2>
+    <S2><C>[预订单]</C></S2>
+    =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    <RN>下单时间: ${time}
+    <RN>订单编号: ${orderIndex}
+    <H2><C><TR><TD>脆笋腊肉饭</TD><TD>×1</TD><TD>21</TD></TR><TR><TD>冰红茶</TD><TD>×1</TD><TD>6</TD></TR></C></H2>
+    ****************************<RN>
+    <H2>总价:18</H2><RN>
+    地址: ${address}<RN>
+    ${name} ${phone}<RN>`
+}
+
+export const printOrder = (time, printData) => {
+    let a = { "appid": 10439, "timestamp": time, "deviceid": "70007846", "devicesecret": "uwrum8u8", "printdata": printData };
+    function compareFunction() {
+        return function (src, tar) {
+            //获取比较的值
+            var v1 = src;
+            var v2 = tar;
+            if (v1 > v2) {
+                return 1;
+            }
+            if (v1 < v2) {
+                return -1;
+            }
+            return 0;
+        };
+    }
+    function generatesign(param, secret) {
+        let arr: any = [];
+        for (let key in param) {
+            arr.push(key);
+
+        }
+        let newarr = arr.sort(compareFunction());
+        var stringToSigned = '';
+        for (var i = 0; i < newarr.length; i++) {
+            if (newarr[i] && newarr[i] != 'appsecret') {
+                let key = newarr[i];
+                stringToSigned += newarr[i] + param[key];
+            }
+        }
+        stringToSigned += secret;
+        return md5(stringToSigned);
+    }
+    let secret = 'd1985be4352368bc23cf85bd07d1ecf2';
+    let param = a;
+    let sign = generatesign(param, secret);
+    param['sign'] = sign;
+    postApi('https://open-api.ushengyun.com/printer/print', param);
 }

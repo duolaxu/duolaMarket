@@ -8,7 +8,6 @@ export default function Index() {
         postApi(`${baseUrl}/order/getMessagesNumber`, {
             openId: 'ofsx15BMM25n5I1nmT4Xg7X9x3Dg',
         }).then(res => {
-            // console.log(res.data.data[0].messageNumber);
             setMessagesNumber(res.data.data[0].messageNumber);
             setStorageSync("messageNumber", res.data.data[0].messageNumber);
         })

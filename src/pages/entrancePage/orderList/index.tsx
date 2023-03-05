@@ -23,6 +23,9 @@ export default function orderList(props) {
                 let data = res.data.data;
                 if (data.length == 0) {
                     setDataNull(true);
+                    if (index == 0) {
+                        setOrderInfo([]);
+                    }
                 } else {
                     setDataNull(false);
                     setFirstIndex(index + 10);
@@ -55,6 +58,9 @@ export default function orderList(props) {
                 let data = res.data.data;
                 if (data.length == 0) {
                     setDataNull(true);
+                    if (index == 0) {
+                        setOrderInfo([]);
+                    }
                 } else {
                     setDataNull(false);
                     let arr = [];
@@ -110,7 +116,7 @@ export default function orderList(props) {
         return topText.map((item, index) => {
             return <>
                 <View
-                    style={{ width: "49%", height: "100%", position: "relative", zIndex: "10", }}
+                    style={{ width: "49%", height: "100%", position: "relative", zIndex: "10", fontSize: "15px" }}
                     className="flexCenter"
                 >
                     <View
@@ -135,7 +141,6 @@ export default function orderList(props) {
     }
 
     const touchStart = e => {
-        // console.log("START");
         touchX = e.changedTouches[0].clientX;
         touchY = e.changedTouches[0].clientY;
     }
@@ -167,9 +172,7 @@ export default function orderList(props) {
                 pxTorpx(res_1 => {
                     let judge = (res.height + res.top) * res_1 - heightrpx;
                     if (judge <= 400) {
-                        console.log("元素节点数据 = ", res);
                         if (!isDataNull) {
-                            // searchWork(searchName, 1, firstIndex, 10);
                             if (topBarIndex == 0) {
                                 getOrderDetail(firstIndex);
                             } else {

@@ -36,7 +36,6 @@ export default function MainContent(props) {
             storeId: 7,
             dishType: type
         }).then(res => {
-            // console.log("物品 = ", res.data);
             dishDataOver[index] = new Array();
             dishDataOver[index] = res.data.data;
             setDataOver(dishDataOver);
@@ -60,7 +59,6 @@ export default function MainContent(props) {
     }, [clickInput])
 
     useEffect(() => {
-        // console.log("购物类型改变 = ", selectDishTab);
         setView("view" + selectDishTab);
         if (dishDataOver.length != dishTypelength) {
             getDishTypeList(selectDishTab, dishTypeList[selectDishTab]);
@@ -89,7 +87,6 @@ export default function MainContent(props) {
                 let typeList = res.data.data;
                 setDishTypeLength(typeList.length);
                 setDishTypeList(typeList);
-                // console.log("物品种类 = ", res.data);
                 for (let i = 0; i < typeList.length; i++) {
                     setTimeout(() => {
                         getDishTypeList(i, typeList[i]);
@@ -97,7 +94,6 @@ export default function MainContent(props) {
                 }
             }
         })
-        // console.log("初始化下标 = ", selectDishTab);
 
     }, [])
 
@@ -112,30 +108,18 @@ export default function MainContent(props) {
     }
 
     let isSetIndex = false;
+    // let sideIndex = 0;
 
     const onScroll = event => {
-        // 类型数量对应id数量，从接口获取dishTypeList
-        // console.log("???? = ", typeLength);
-        let dishTypeList = 8;
-        let judge = true; // 图片加载临界点
         for (let i = 0; i < dishTypelength; i++) {
-            const query = Taro.createSelectorQuery()
+            const query = Taro.createSelectorQuery();
             query.select(`#view${i}`).boundingClientRect(function (res) {
-                // console.log(i + " = " + res.top);
                 if (res.top <= (380 / pxtorpx)) {
-                    // console.log("I = ", i);
-                    // console.log("RES.TOP = ", res.top);
-                    // if(judge){
-                    //     judge=false;
-                    //     setTypeIndex(i);
-                    //     for(let j=0;j<=i;j++){
-
-                    //     }
-                    // }
+                    if (i == dishTypelength - 1) {
+                        setSidebarIndex(i);
+                    }
                     isSetIndex = true;
                 } else {
-                    // console.log("I_1 = ", i);
-                    // console.log("RES.TOP_1 = ", res.top);
                     if (isSetIndex) {
                         setSidebarIndex(i - 1);
                         isSetIndex = false;

@@ -12,22 +12,6 @@ export default function BottomBar() {
     const [order, setOrder] = useState<orderType>();
 
     useEffect(() => {
-        // Taro.showModal({
-        //     title: '提示',
-        //     content: params?.orderIndex,
-        //     success: function (res) {
-        //         if (res.confirm) {
-        //             console.log('用户点击确定')
-        //         } else if (res.cancel) {
-        //             console.log('用户点击取消')
-        //         }
-        //     }
-        // })
-        // Taro.showToast({
-        //     title: params?.openId || '',
-        //     icon: 'success',
-        //     duration: 2000,
-        // })
         Taro.request({
             url: `${baseUrl}/order/getSingleOrder`, // 获取单个订单信息
             data: {
@@ -40,11 +24,6 @@ export default function BottomBar() {
             },
             success: res => {
                 setOrder(res.data.data[0]);
-                // Taro.showToast({
-                //     title: res.data.data,
-                //     icon: 'success',
-                //     duration: 2000,
-                // })
             }
         })
         heightRpx(res => {
@@ -77,18 +56,18 @@ export default function BottomBar() {
             </View>
             <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "95%", height: "320rpx", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
                 <View style={{ width: "92%", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
-                    <View style={{ fontSize: "18px" }}>订单已完成</View>
+                    <View style={{ fontSize: "18px" }}>{params?.orderStatus}</View>
                     <View style={{ fontSize: "14px", color: "rgb(153,153,153)" }}>感谢你对我们的信任, 期待您的下次光临</View>
-                    <View onClick={() => Taro.navigateTo({
+                    {/* <View onClick={() => Taro.navigateTo({
                         url: `/pages/evaluate/index`
                     })
-                    } style={{ color: "rgb(153,153,153)", width: "170rpx", height: "65rpx", borderRadius: "4px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid rgb(221,221,221)", fontSize: "13px" }}>评价</View>
+                    } style={{ color: "rgb(153,153,153)", width: "170rpx", height: "65rpx", borderRadius: "4px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid rgb(221,221,221)", fontSize: "13px" }}>评价</View> */}
                 </View>
             </View>
             <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "95%", height: "auto", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
                 <View style={{ width: "92%", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
                     <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", border: "0px solid rgb(221,221,221)", borderWidth: "0px 0px 1px 0px", width: "100%", height: "125rpx", fontSize: "18px" }}>
-                        <View>{'巷子里副食店'}</View>
+                        <View>{'巷子里超市'}</View>
                         <View onClick={() => {
                             Taro.makePhoneCall({
                                 phoneNumber: '15982843367', // 拨打电话

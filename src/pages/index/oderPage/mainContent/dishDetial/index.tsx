@@ -145,7 +145,7 @@ export default function Dish(props) {
                 <View style={{ width: "100%", height: "18vh", backgroundColor: "white", display: "flex", justifyContent: "space-around" }}>
                     <View style={{ width: "40%", height: "13vh", display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
                         <View style={{ fontSize: "15px", fontWeight: "bold" }}>{dishData.dishName}</View>
-                        <View style={{ fontSize: "12px", color: "rgb(127,127,127)" }}>{'月售' + (dishData.dishMonthSales || 0) + "份"}</View>
+                        {/* <View style={{ fontSize: "12px", color: "rgb(127,127,127)" }}>{'月售' + (dishData.dishMonthSales || 0) + "份"}</View> */}
                         <View style={{ fontSize: "14px", color: "rgb(255,108,54)", fontWeight: "bold" }}>{dishData.dishPrice}￥</View>
                     </View>
                     <View style={{ width: "40%", height: "13vh", backgroundColor: 'white', display: 'flex', flexDirection: "column", justifyContent: 'flex-end', alignItems: 'flex-end' }}>

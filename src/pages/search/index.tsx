@@ -63,7 +63,7 @@ export default function Search(props) {
                     <View style={{ width: "10%", display: "flex", justifyContent: "center" }}>
                         <View style={{ color: "rgb(127,127,127)" }} className="at-icon at-icon-search"></View>
                     </View>
-                    <Input value={inputValue} onInput={(e) => { inputSearch(e) }} style={{ width: "80%", height: "100%" }} placeholder="请输入菜品名"></Input>
+                    <Input value={inputValue} onInput={(e) => { inputSearch(e) }} style={{ width: "80%", height: "100%" }} placeholder="请输入商品名"></Input>
                     {inputValue == '' ? '' : <View onClick={() => { setInputValue(""); setDishData_1([]) }} className="at-icon at-icon-close" style={{ display: "flex", justifyContent: "center", alignItems: "center", fontSize: "13px", width: "40rpx", height: "40rpx", backgroundColor: "rgb(240,240,240)", borderRadius: "50%" }}></View>}
                 </View>
                 <View onClick={() => { setClickInput(false) }} style={{ height: "80%", width: "10%", display: "flex", justifyContent: "center", alignItems: "center" }}>取消</View>

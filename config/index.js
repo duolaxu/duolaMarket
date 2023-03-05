@@ -1,6 +1,6 @@
 const config = {
-  projectName: 'diancan',
-  date: '2022-9-14',
+  projectName: '巷子里超市',
+  date: '2023-3-1',
   designWidth: 750,
   deviceRatio: {
     640: 2.34 / 2,
@@ -10,6 +10,12 @@ const config = {
   sourceRoot: 'src',
   outputRoot: 'dist',
   plugins: [],
+  compiler: {
+    type: "webpack5",
+    prebundle: {
+      enable: false
+    }
+  },
   defineConstants: {
   },
   copy: {
@@ -47,17 +53,17 @@ const config = {
     }
   },
   h5: {
-  //   devServer: {
-  //     host: 'localhost',
-  //     port: 8000,
-  //     proxy: {
-  //         '/api/v1': {
-  //             target: 'http://localhost:8000',  // 服务端地址
-  //             changeOrigin: true
-  //         }
-  //     }
-  // },
-  publicPath: '/',
+    //   devServer: {
+    //     host: 'localhost',
+    //     port: 8000,
+    //     proxy: {
+    //         '/api/v1': {
+    //             target: 'http://localhost:8000',  // 服务端地址
+    //             changeOrigin: true
+    //         }
+    //     }
+    // },
+    publicPath: '/',
     staticDirectory: 'static',
     postcss: {
       autoprefixer: {

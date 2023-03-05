@@ -4,7 +4,7 @@ import Taro from "@tarojs/taro";
 export default function orderList(props) {
     const { orderInfo } = props;
     return <View onClick={() => Taro.navigateTo({
-        url: `/pages/orderDetail/index?openId=${orderInfo.openId}&orderIndex=${orderInfo.orderIndex}`
+        url: `/pages/orderDetail/index?openId=${orderInfo.openId}&orderIndex=${orderInfo.orderIndex}&orderStatus=${orderInfo.orderStatus}`
     })}
         style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20rpx", width: "95%", height: "300rpx", backgroundColor: "white", borderRadius: "10rpx" }}>
         <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: "90%", height: "90%" }}>

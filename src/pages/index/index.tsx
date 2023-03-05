@@ -9,7 +9,6 @@ import Taro from "@tarojs/taro";
 
 export default function Index() {
   const params = getCurrentInstance().router?.params;
-  // console.log("参数 = ", params);
 
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [bottomBackColor, setBottomBackColor] = useState("rgb(89,89,89)");
@@ -93,7 +92,7 @@ export default function Index() {
             <View style={{ width: "100%", paddingLeft: "40rpx", display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
               <View onClick={() => { }} style={{ fontSize: "14px" }} className="at-icon at-icon-settings"></View>
               {/* <View onClick={() => setShowColorPicker(true)} style={{ fontSize: "14px" }} className="at-icon at-icon-settings"></View> */}
-              <View style={{ paddingLeft: "10rpx", fontSize: "12px", color: "rgb(127,127,127)" }}>营业时间: 9:00~22:00</View>
+              <View style={{ paddingLeft: "10rpx", fontSize: "12px", color: "rgb(127,127,127)" }}>营业时间: 8:00~22:00</View>
             </View>
           </View>
           <View style={{ zIndex: "103" }}>

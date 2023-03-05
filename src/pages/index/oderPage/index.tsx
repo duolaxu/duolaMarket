@@ -27,10 +27,7 @@ export default function Index(params) { // params包含商店Id，商店名，�
     const [topBarChange, setTopBarChange] = useState(false);
     const [dishDataDetail, setDishDataDetail] = useState({});
 
-    const [parsclick, setParsclick] = useState(false);
-
     useDidShow(() => {
-        // console.log("SHOW = ", getStorageSync("shopCart") == "");
         if (getStorageSync("shopCart") == "") {
             setShopCartCounts(0);
             setRenderDishData(pre => !pre);
@@ -40,7 +37,6 @@ export default function Index(params) { // params包含商店Id，商店名，�
         setCartChange(pre => ++pre);
     })
     useDidHide(() => {
-        // console.log("HIDE = ", getStorageSync("shopCart") == "");
         if (getStorageSync("shopCart") == "") {
             setShopCartCounts(0);
             setRenderDishData(pre => !pre);
@@ -48,13 +44,8 @@ export default function Index(params) { // params包含商店Id，商店名，�
     })
 
     useEffect(() => {
-        Taro.setNavigationBarTitle({ title: '巷子里副食店' })
-        // Taro.setNavigationBarTitle({ title: params.params.storeName })
+        Taro.setNavigationBarTitle({ title: '巷子里超市' });
     }, [])
-
-    // useEffect(() => {
-    //     console.log("类型改变 = ", selectDishTab);
-    // }, [selectDishTab])
 
     useEffect(() => {
         getStorage("shopCart", res => {

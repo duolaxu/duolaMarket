@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Image, Textarea, Radio, Input, Button, Text } from "@tarojs/components";
 import "taro-ui/dist/style/components/icon.scss";
-import { heightRpx, baseUrl, getNowLocation, postApi, getStorageSync, swapTime } from "../../static";
+import { heightRpx, baseUrl, getNowLocation, postApi, getStorageSync, swapTime, printOrder, templatePrintData } from "../../static";
 import Taro, { getCurrentInstance } from "@tarojs/taro";
 
 export default function BottomBar() {
@@ -30,6 +30,7 @@ export default function BottomBar() {
     const [tagName, setTagName] = useState(params?.addressTagName);
     const [counts, setCounts] = useState(0);
     const [errandDetails, setErrandDetail] = useState("");
+    const [arriveTime, setArriveTime] = useState("");
 
     useEffect(() => {
         heightRpx(res => {
@@ -37,14 +38,11 @@ export default function BottomBar() {
         });
         getNowLocation(addr => {
             setAddress(addr);
-            // console.log("addr = ", addr);
         })
         postApi(`${baseUrl}/order/getAddress`, {
             openId: getStorageSync("openId")
         })
             .then(res => {
-                // console.log("res = ",res)
-                // console.log("res = ", res.data.data);
                 let data = res.data.data;
                 if (data.length == 0) {
 
@@ -71,6 +69,9 @@ export default function BottomBar() {
     const inputEndAddress = e => {
         setEndAddress(e.detail.value);
     };
+    const inputArriveTime = e => {
+        setArriveTime(e.detail.value);
+    };
 
     const outTradeNo = () => { // 订单号生成
         let nowTime = Date.now().toString();
@@ -90,6 +91,7 @@ export default function BottomBar() {
         }
         let orderIndex = outTradeNo();
         let orderTime = swapTime();
+        // printOrder(orderTime, templatePrintData(orderTime, orderIndex, `${preAddress}${endAddress}`, name, phone));
         postApi(`${baseUrl}/order/insertErrand`, {
             userName: name,
             userPhone: phone,
@@ -97,10 +99,12 @@ export default function BottomBar() {
             orderText: errandDetails,
             orderIndex,
             certificate,
+            arriveTime,
             errandDate: orderTime,
             openId: getStorageSync("openId"),
         }).then(res => {
             if (res.data.code == 0) {
+                printOrder(orderTime, templatePrintData(orderTime, orderIndex, `${preAddress}${endAddress}`, name, phone));
                 postApi(`${baseUrl}/order/sendWeChats`, {
                     openId: 'ofsx15BMM25n5I1nmT4Xg7X9x3Dg',
                     orderType: '跑腿',
@@ -167,9 +171,16 @@ export default function BottomBar() {
                         {/* <View className="at-icon at-icon-user"></View> */}
                     </View>
                 </View>
+                <View style={{ width: "95%", height: "150rpx", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+                    <View className="flexCenter" style={{ width: "150rpx", height: "100%" }}>配送时间: </View>
+                    <Input onInput={e => { inputArriveTime(e) }} value={arriveTime} className="flexCenter" style={{ width: "500rpx", height: "100%" }} placeholder="填写希望送达的时间范围" />
+                    <View className="flexCenter" style={{ width: "50rpx", height: "100%", }}>
+                        {/* <View className="at-icon at-icon-user"></View> */}
+                    </View>
+                </View>
                 <View className="flexColumn" style={{ position: "relative", marginTop: "15rpx", display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "400rpx", fontSize: "13px", backgroundColor: "white", borderRadius: "5px" }}>
                     <View style={{ width: "96%", height: "90%", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "white", borderRadius: "4px" }}>
-                        <Textarea cursorSpacing={3} style={{ width: "100%", height: "100%", overflow: "scroll", borderRadius: "5px", border: "1px solid rgb(254,108,57)" }} maxlength={150} onInput={e => { getVal(e) }} placeholder={'跑腿代购详细描述'} />
+                        <Textarea cursorSpacing={3} style={{ width: "100%", height: "100%", overflow: "scroll", borderRadius: "5px", border: "1px solid rgb(254,108,57)" }} maxlength={150} onInput={e => { getVal(e) }} placeholder={'跑腿内容详细描述'} />
                     </View>
                     <Text style={{ position: "absolute", bottom: "15px", right: "15px", color: "rgb(157,157,157)", fontSize: "12px" }}>{counts}/150</Text>
                 </View>

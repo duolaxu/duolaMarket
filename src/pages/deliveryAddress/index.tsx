@@ -35,7 +35,6 @@ export default function BottomBar() {
         });
         getNowLocation(addr => {
             setAddress(addr);
-            // console.log("addr = ", addr);
         });
         // postApi(`${baseUrl}/order/getAddress`, {
         //     openId: getStorageSync("openId")

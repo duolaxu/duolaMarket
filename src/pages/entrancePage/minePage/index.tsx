@@ -52,7 +52,6 @@ export default function minePage(props) {
                         setEndAddress(data[0].endAddress);
                         setAddressTagName(data[0].addressTagName);
                     }
-                    // console.log("回收 = ", res.data.data);
                     // setHeadImg(baseUrl + res.data.data[0].headImg);
                     // setNickName(res.data.data[0].nickName);
                 }

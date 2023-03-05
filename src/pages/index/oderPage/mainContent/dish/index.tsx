@@ -15,9 +15,6 @@ export default function Dish(prop) {
     const [loadImgSrc, setImgSrc] = useState(false);
 
     useEffect(() => {
-        // window.onscroll=()=>{
-        //     console.log("????")
-        // }
         getStorage(
             'shopCart',
             function (res) {
@@ -37,27 +34,6 @@ export default function Dish(prop) {
         setTimeout(() => {
             setImgSrc(true);
         }, dishIndex * 10); //图片异步加载
-        // Taro.createSelectorQuery().select(`#dish_${dishIndex}`).boundingClientRect(function (rect) {
-        //     // if (0 <= rect.top) {
-        //     //     that.setData({
-        //     //         curr: false
-        //     //     })
-        //     // } else {
-        //     //     that.setData({
-        //     //         curr: true
-        //     //     })
-        //     // }
-        //     // console.log(dishIndex + " = " + rect.top);
-        //     if (rect.top > 200 && rect.top < 2000) {
-        //         setImgSrc(true);
-        //     }
-
-        // }).exec()
-
-        // console.log("dishIndex = ", dishIndex);
-        // document.addEventListener("scroll", () => {
-        //     console.log("???!!!!")
-        // }, true)
     })
 
     const addshopcar = (e) => {
@@ -104,7 +80,7 @@ export default function Dish(prop) {
     }
 
     return (<>
-        <View id={'dish_' + dishIndex} onClick={() => { setShowDishDetail(pre => !pre); setDishDataDetail(props) }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '90%', height: '205rpx', backgroundColor: "white", fontSize: '10px', borderRadius: '5px', marginTop: '3%', marginLeft: "3%" }}>
+        <View id={'dish_' + dishIndex} onClick={() => { setShowDishDetail(pre => !pre); setDishDataDetail(props) }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '90%', height: '185rpx', backgroundColor: "white", fontSize: '10px', borderRadius: '5px', marginTop: '3%', marginLeft: "3%" }}>
             <View style={{ width: "90%", height: "80%", backgroundColor: "white", display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '5px' }}>
                 <View style={{
                     width: "164rpx",

@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { baseUrl, getDistance } from "../../../../static";
 import Taro, { setStorageSync } from "@tarojs/taro";
 import { useState } from "react";
-import NavigationImg from "../../../../icons/navigation.svg";
 export default function StoreComponent(props: storeComponentProps) {
 
     const [lat, setLat] = useState(0);
@@ -110,7 +109,7 @@ export default function StoreComponent(props: storeComponentProps) {
                             width: "50rpx",
                             height: "50rpx",
                             paddingRight: "10rpx"
-                        }} src={NavigationImg} />
+                        }} src={`${baseUrl}/icon/navigation.svg`} />
                         <View style={{ color: "#FEBB40" }}>导航</View>
 
                     </View>

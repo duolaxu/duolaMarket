@@ -49,7 +49,7 @@ export default function BottomBar() {
     return (<>
         <View style={{ position: "relative", zIndex: "100", display: "flex", flexDirection: "column", alignItems: "center", width: "750rpx", height: "auto", backgroundColor: "rgb(244,244,244)", overflow: "scroll", }}>
             <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "center", width: "95%", height: "320rpx", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
-                <View style={{ fontSize: "18px", height: "40%", display: "flex", alignItems: "center" }}>订单凭证</View>
+                <View style={{ fontSize: "18px", height: "40%", display: "flex", alignItems: "center" }}>跑腿订单凭证</View>
                 <View style={{ fontSize: "32px", height: "30%", display: "flex", alignItems: "flex-start" }}>{order?.certificate}</View>
                 <View style={{ height: "30%", display: "flex", alignItems: "center" }}>
                     <View style={{ color: "rgb(254,187,64)", backgroundColor: "rgb(255,248,236)", fontSize: "12px", padding: "3rpx 20rpx 3px 20rpx", borderRadius: "13px" }}>祝你购物愉快! </View>
@@ -57,7 +57,7 @@ export default function BottomBar() {
             </View>
             <View style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "95%", height: "260rpx", backgroundColor: "white", marginTop: "15rpx", borderRadius: "5px" }}>
                 <View style={{ width: "92%", height: "70%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start", }}>
-                    <View style={{ fontSize: "18px" }}>订单创建成功</View>
+                    <View style={{ fontSize: "18px" }}>跑腿订单创建成功</View>
                     <View style={{ fontSize: "14px", color: "rgb(153,153,153)" }}>感谢你对我们的信任, 期待您的下次光临</View>
                     {/* <View onClick={() => Taro.navigateTo({
                         url: `/pages/evaluate/index`
@@ -99,6 +99,10 @@ export default function BottomBar() {
                         <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
                             <View>订单编号</View>
                             <View>{order?.orderIndex}</View>
+                        </View>
+                        <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
+                            <View>送到时间范围</View>
+                            <View>{order?.arriveTime}</View>
                         </View>
                         <View style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "70rpx" }}>
                             <View>跑腿地址</View>

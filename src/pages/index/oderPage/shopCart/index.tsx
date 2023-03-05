@@ -89,7 +89,7 @@ export default function BottomBar(props) {
                     <View style={{ fontSize: "16px", width: "100%", height: "60%", position: "relative", bottom: "15rpx", right: "20rpx" }}>
 
                         {
-                            shopCartMoney == 0 ? <View style={{ color: "rgb(150,150,150)" }}>未选购商品</View> : shopCartMoney + '￥'
+                            shopCartMoney == 0 ? <View style={{ color: "rgb(150,150,150)" }}>15元起送</View> : shopCartMoney + '￥'
                         }
                     </View>
                 </View>
@@ -105,10 +105,19 @@ export default function BottomBar(props) {
                         </View>
                     </Button> : <Button onClick={
                         e => {
-                            let nowTime = Date.now();
-                            if (nowTime - preTime >= 1500) {
-                                setPreTime(nowTime);
-                                toBought(e);
+                            if (shopCartMoney >= 15) {
+                                let nowTime = Date.now();
+                                if (nowTime - preTime >= 1500) {
+                                    setPreTime(nowTime);
+                                    toBought(e);
+                                }
+                            } else {
+                                e.stopPropagation();
+                                Taro.showToast({
+                                    title: `还差${15 - shopCartMoney}元起送哟~`,
+                                    icon: 'none',
+                                    duration: 2000
+                                })
                             }
                         }
                     } style={{ width: "230rpx", height: "85rpx", fontSize: "18px", borderRadius: "20px", backgroundColor: bottomBtnBackColor, color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
