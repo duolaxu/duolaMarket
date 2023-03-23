@@ -4,28 +4,33 @@ import "taro-ui/dist/style/components/icon.scss";
 import HomePage from "./homePage";
 import OrderList from "./orderList";
 import MinePage from "./minePage";
-import Taro from "@tarojs/taro";
-import { baseUrl, setStorageSync, } from "../../static";
-// const { Configuration, OpenAIApi } = require("openai");
-// import { Configuration, OpenAIApi } from "openai";
+import Taro, { getStorageSync } from "@tarojs/taro";
+import { baseUrl, setStorageSync, postApi } from "../../static";
 
 export default function BottomBar() {
     const [newUser, setNewUser] = useState(false);
-    // const func = async () => {
 
-    //     const configuration = new Configuration({
-    //         apiKey: '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',
-    //     });
-    //     const openai = new OpenAIApi(configuration);
-
-    //     const completion = await openai.createCompletion({
-    //         model: "text-davinci-003",
-    //         prompt: "Hello world",
-    //     });
-    // }
+    const getDishTypeList = (index, type) => {
+        postApi(`${baseUrl}/order/getUpTypeDishList`, {
+            storeId: 7,
+            dishType: type
+        }).then(res => {
+            // console.log("数据 = ", res);
+            setStorageSync(type, res.data.data);
+            // dishDataOver[index] = new Array();
+            // dishDataOver[index] = res.data.data;
+            // setDataOver(dishDataOver);
+            // typeLength[index] = res.data.data.length;
+            // let arr = [];
+            // for (let i = 0; i < dishDataOver.length; i++) {
+            //     arr = arr.concat(dishDataOver[i]);
+            // }
+            // setDishData(arr);
+            // setDataChange(pre => !pre);
+        })
+    }
 
     useEffect(() => {
-        // func();
         Taro.login({
             success(res) {
                 if (res.code) {
@@ -54,6 +59,49 @@ export default function BottomBar() {
                 }
             }
         })
+
+        Taro.request({
+            url: `${baseUrl}/order/getDishTypeList`,
+            data: {
+                // storeId: storeParams.storeId
+                storeId: 7
+            },
+            method: "POST",
+            header: {
+                'content-type': 'application/json'
+            },
+            success: function (res) {
+                let typeList = res.data.data;
+                // console.log("TYPELIST = ", res.data.data);
+                setStorageSync("dishTypeList", res.data.data);
+                // console.log(getStorageSync("dishTypeList"));
+                // setDishTypeLength(typeList.length);
+                // setDishTypeList(typeList);
+                for (let i = 0; i < typeList.length; i++) {
+                    setTimeout(() => {
+                        getDishTypeList(i, typeList[i]);
+                    }, 10 * i)
+                }
+            }
+        })
+
+        Taro.request({
+            url: `${baseUrl}/order/getSingleStore`,
+            data: {
+                // storeId
+                storeId: 7
+            },
+            method: "POST",
+            header: {
+                'content-type': 'application/json'
+            },
+            success: function (res) {
+                //   setStoreData(res.data.data[0]);
+                // console.log("location = ", res.data.data[0].storeLocation);
+                setStorageSync("storeLocation", res.data.data[0].storeLocation);
+            }
+        })
+
     }, [])
     const [activeIndex, setActiveIndex] = useState<Number>(0);
     let bottomText = [

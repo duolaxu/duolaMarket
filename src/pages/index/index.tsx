@@ -16,7 +16,8 @@ export default function Index() {
   const [iconUrl, setIconUrl] = useState("");
   const [showFullLocation, setShowFullLocation] = useState(false);
   const [clickInput, setClickInput] = useState(params?.isClick == "true" ? true : false); // 是否点击搜索框
-  const [storeData, setStoreData] = useState<any>();
+  // const [storeData, setStoreData] = useState<any>();
+  const [storeLocation, setStoreLocation] = useState<any>(getStorageSync("storeLocation") || "")
 
   let parsClick = false;
   if (params?.isClick == "true") {
@@ -28,27 +29,29 @@ export default function Index() {
       parsClick = true;
       setClickInput(true);
     }
-    Taro.request({
-      url: `${baseUrl}/order/getSingleStore`,
-      data: {
-        // storeId
-        storeId: 7
-      },
-      method: "POST",
-      header: {
-        'content-type': 'application/json'
-      },
-      success: function (res) {
-        setStoreData(res.data.data[0]);
-      }
-    })
+    if (storeLocation == "") {
+      Taro.request({
+        url: `${baseUrl}/order/getSingleStore`,
+        data: {
+          // storeId
+          storeId: 7
+        },
+        method: "POST",
+        header: {
+          'content-type': 'application/json'
+        },
+        success: function (res) {
+          setStoreLocation(res.data.data[0].storeLocation);
+        }
+      })
+    }
   }, [])
   return (<>
     {/* top图片 地址，设置，店铺头像 */}
     {
       clickInput ? "" : <>
         <View style={{ width: "750rpx", height: "200rpx", }}>
-          <Image style={{ width: "100%", height: "100%" }} src="https://duolago.cn/secondHand/undefined_1676673416419.jpg" />
+          <Image style={{ width: "100%", height: "100%" }} src="https://duolago.cn/icon/topHead.png" />
         </View>
         <View style={{ width: "100%", height: "100rpx", display: "flex", justifyContent: "space-around", alignItems: "center", }}>
           <View style={{ width: "70%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "center" }}>
@@ -86,8 +89,8 @@ export default function Index() {
                       userSelect: "all", // 单击文本区域复制全文本
                       backgroundColor: "rgba(154,154,154,0.5)",
                       borderRadius: "3px"
-                    }}>{storeData?.storeLocation}</View> : ''}
-                {storeData?.storeLocation}</View>
+                    }}>{storeLocation}</View> : ''}
+                {storeLocation}</View>
             </View>
             <View style={{ width: "100%", paddingLeft: "40rpx", display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
               <View onClick={() => { }} style={{ fontSize: "14px" }} className="at-icon at-icon-settings"></View>
@@ -96,7 +99,8 @@ export default function Index() {
             </View>
           </View>
           <View style={{ zIndex: "103" }}>
-            <Image style={{ borderRadius: "4px", width: "140rpx", height: "140rpx", zIndex: "103", marginTop: "-55rpx" }} src={`${baseUrl + storeData?.storeHeadImg}`} />
+            {/* <Image style={{ borderRadius: "4px", width: "140rpx", height: "140rpx", zIndex: "103", marginTop: "-55rpx" }} src={`${baseUrl + storeData?.storeHeadImg}`} /> */}
+            <Image style={{ borderRadius: "4px", width: "140rpx", height: "140rpx", zIndex: "103", marginTop: "-55rpx" }} src={`${baseUrl}/icon/duola.png`} />
           </View>
         </View>
       </>

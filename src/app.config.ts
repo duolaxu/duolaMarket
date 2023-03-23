@@ -1,5 +1,4 @@
 export default defineAppConfig({
-
   pages: [
     'pages/entrancePage/index',
     'pages/errand/index',
@@ -17,6 +16,7 @@ export default defineAppConfig({
     navigationBarTitleText: 'WeChat',
     navigationBarTextStyle: 'black'
   },
+  // "lazyCodeLoading": "requiredComponents",
   "permission": {
     "scope.userLocation": {
       "desc": "你的位置信息将用于小程序定位"

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Taro from "@tarojs/taro";
+import Taro, { getStorageSync } from "@tarojs/taro";
 import Dish from "./dish";
 import { dishDataType } from "./type";
 import { View, ScrollView } from "@tarojs/components";
@@ -36,6 +36,7 @@ export default function MainContent(props) {
             storeId: 7,
             dishType: type
         }).then(res => {
+            // console.log("数组 = ", res);
             dishDataOver[index] = new Array();
             dishDataOver[index] = res.data.data;
             setDataOver(dishDataOver);
@@ -59,6 +60,8 @@ export default function MainContent(props) {
     }, [clickInput])
 
     useEffect(() => {
+        // console.log("????_____!!!!");
+        // console.log("S = ", selectDishTab);
         setView("view" + selectDishTab);
         if (dishDataOver.length != dishTypelength) {
             getDishTypeList(selectDishTab, dishTypeList[selectDishTab]);
@@ -72,28 +75,53 @@ export default function MainContent(props) {
         pxTorpx(res => {
             setPxToRpx(res);
         })
-
-        Taro.request({
-            url: `${baseUrl}/order/getDishTypeList`,
-            data: {
-                // storeId: storeParams.storeId
-                storeId: 7
-            },
-            method: "POST",
-            header: {
-                'content-type': 'application/json'
-            },
-            success: function (res) {
-                let typeList = res.data.data;
-                setDishTypeLength(typeList.length);
-                setDishTypeList(typeList);
-                for (let i = 0; i < typeList.length; i++) {
-                    setTimeout(() => {
-                        getDishTypeList(i, typeList[i]);
-                    }, 50 * i)
+        const dishListType = getStorageSync("dishTypeList");
+        // console.log("dishTypeList = ", dishListType);
+        // console.log("<>>< = ", dishListType);
+        if (dishListType.length == 0) {
+            // console.log("?AK>D{}")
+            Taro.request({
+                url: `${baseUrl}/order/getDishTypeList`,
+                data: {
+                    // storeId: storeParams.storeId
+                    storeId: 7
+                },
+                method: "POST",
+                header: {
+                    'content-type': 'application/json'
+                },
+                success: function (res) {
+                    let typeList = res.data.data;
+                    setDishTypeLength(typeList.length);
+                    setDishTypeList(typeList);
+                    for (let i = 0; i < typeList.length; i++) {
+                        setTimeout(() => {
+                            getDishTypeList(i, typeList[i]);
+                        }, 50 * i)
+                    }
                 }
+            })
+        }
+        else {
+            setDishTypeList(dishListType);
+            setDishTypeLength(dishListType.length);
+            // console.log("AAA = ", dishDataOver);
+            for (let index = 0; index < dishListType.length; index++) {
+                setTimeout(() => {
+                    dishDataOver[index] = new Array();
+                    dishDataOver[index] = getStorageSync(dishListType[index]);
+                    // console.log("OVER = ", dishDataOver);
+                    setDataOver(dishDataOver);
+                    typeLength[index] = getStorageSync(dishListType[index]).length;
+                    let arr = [];
+                    for (let i = 0; i < dishDataOver.length; i++) {
+                        arr = arr.concat(dishDataOver[i]);
+                    }
+                    setDishData(arr);
+                    setDataChange(pre => !pre);
+                }, 10 * index)
             }
-        })
+        }
 
     }, [])
 

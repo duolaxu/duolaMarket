@@ -1,4 +1,4 @@
 
 export default definePageConfig({
-    navigationBarTitleText: "duolaGo"
+    navigationBarTitleText: "巷子里超市"
 })

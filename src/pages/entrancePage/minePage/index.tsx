@@ -80,12 +80,12 @@ export default function minePage(props) {
                 const tempFilePaths = res.tempFilePaths;
                 setHeadImg(tempFilePaths[0]);
                 Taro.uploadFile({
-                    url: `${baseUrl}/uploadImg`,
+                    url: `${baseUrl}/order/uploadImg`,
                     filePath: tempFilePaths[0],
                     name: 'file',
                     header: {
                         imgName: getStorageSync("openId"),
-                        imgType: '5',
+                        imgType: '0',
 
                         contentType: 'multipart/form-data'
                     },

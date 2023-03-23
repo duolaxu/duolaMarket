@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import Taro from "@tarojs/taro";
+import Taro, { getStorageSync } from "@tarojs/taro";
 import { heightRpx, baseUrl } from "../../../../static";
 import { View } from "@tarojs/components";
 import Settings from "../../../../static/sidebar.json";
 
 export default function SideBar(props) {
-    const [sideBarList, setSideBarList] = useState([]);
+    const [sideBarList, setSideBarList] = useState<any[]>(getStorageSync("dishTypeList") || []);
     const { storeParams, setDishTab, sidebarIndex } = props;
     const [heightrpx, setHeightrpx] = useState(0);
     const lent = sideBarList.length;
@@ -26,23 +26,30 @@ export default function SideBar(props) {
     }
 
     useEffect(() => {
+        // console.log("sideBar_1 = ", storeParams);
+        // console.log("sideBar_2 = ", setDishTab);
+        // console.log("sideBar_3 = ", sidebarIndex);
         heightRpx(res => {
             setHeightrpx(res);
         })
-        Taro.request({
-            url: `${baseUrl}/order/getDishTypeList`,
-            data: {
-                // storeId: storeParams.storeId
-                storeId: 7
-            },
-            method: "POST",
-            header: {
-                'content-type': 'application/json'
-            },
-            success: function (res) {
-                setSideBarList(res.data.data);
-            }
-        })
+        if (sideBarList.length == 0) {
+            Taro.request({
+                url: `${baseUrl}/order/getDishTypeList`,
+                data: {
+                    // storeId: storeParams.storeId
+                    storeId: 7
+                },
+                method: "POST",
+                header: {
+                    'content-type': 'application/json'
+                },
+                success: function (res) {
+                    setSideBarList(res.data.data);
+                }
+            })
+        } else {
+
+        }
     }, [])
 
     useEffect(() => {
@@ -69,6 +76,7 @@ export default function SideBar(props) {
     return (<>
         <View style={{ width: '140rpx', height: `${heightrpx - 380}rpx`, backgroundColor: 'white', overflow: 'scroll' }}>
             {sideBarRender()}
+            <View style={{ width: "100%", height: "180rpx", backgroundColor: "rgb(240,240,240)" }}></View>
         </View>
     </>)
 }
